@@ -1,6 +1,4 @@
 # leaflet-challenge
-
-# D3-Challenge
 UCSD Mapping and Leaflet Challenge
 
 ## GitHub Pages Link:
