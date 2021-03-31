@@ -3,10 +3,10 @@ UCSD Mapping and Leaflet Challenge
 
 ## GitHub Pages Link:
 Step 1: 
-https://sanabuw.github.io/D3-Challenge/Leaflet-Step-1/index.html
+https://sanabuw.github.io/leaflet-challenge/Leaflet-Step-1/index.html
 
 Step 2:
-https://sanabuw.github.io/D3-Challenge/Leaflet-Step-2/index.html
+https://sanabuw.github.io/leaflet-challenge/Leaflet-Step-2/index.html
 
 
 # Project Overview
