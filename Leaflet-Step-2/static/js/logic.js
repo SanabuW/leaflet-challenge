@@ -1,7 +1,6 @@
 // Define the data source URL
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-
-
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var plateQueryUrl = "data/PB2002_plates.json";
 // Query the URL to obtain a response
 d3.json(queryUrl, function(data) {
 
@@ -55,8 +54,25 @@ d3.json(queryUrl, function(data) {
     onEachFeature: onEachFeature
     });
 
+// Create new layer object for plates data
+    var plates = new L.LayerGroup();
+// Populate layer object with plates data
+    d3.json(plateQueryUrl, function(data) {
+      console.log(data)
+      plates = L.geoJson(data, {
+        style: function(feature) {
+          return {
+            color: "#ffb514",
+            fillOpacity: 0,
+            weight: 1.5
+          };
+        },
+        // Add polygonal object to layer object
+      }).addTo(plates);
+    });
 
-    // Define streetmap and darkmap layers
+
+    // Define base layers
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
       tileSize: 512,
@@ -73,15 +89,25 @@ d3.json(queryUrl, function(data) {
       accessToken: API_KEY
     });
 
+    var satellite = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+      maxZoom: 18,
+      id: "satellite-v9",
+      accessToken: API_KEY
+    });
+
+
     // Define base layers object
     var baseMaps = {
       "Street Map": streetmap,
-      "Dark Map": darkmap
+      "Dark Map": darkmap,
+      "Satellite": satellite
     };
 
-    // Define overlay object, holding the earthquake layer
+    // Define overlay object, holding the earthquake and plates layers
     var overlayMaps = {
-      Earthquakes: earthquakes
+      Earthquakes: earthquakes,
+      Plates: plates
     };
 
     // Create the map with initial data
@@ -90,7 +116,7 @@ d3.json(queryUrl, function(data) {
         40, -105
       ],
       zoom: 5,
-      layers: [streetmap, earthquakes]
+      layers: [streetmap, earthquakes, plates]
     });
 
     // Create a layer control
@@ -114,7 +140,8 @@ d3.json(queryUrl, function(data) {
     };
       return div;
     };
-    
+
     // Add the legend to the map object
     info.addTo(myMap);
+
   });
